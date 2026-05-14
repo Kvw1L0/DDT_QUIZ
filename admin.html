@@ -3,30 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Administrador</title>
+    <title>Control - DDT Trivia</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body class="admin-body">
     <div class="admin-container">
-        <h1>Panel de Control</h1>
+        <header class="admin-header">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Banco_Santander_Logotipo.svg/1200px-Banco_Santander_Logotipo.svg.png" alt="Santander">
+            <h1>PANEL DE CONTROL TV SHOW</h1>
+        </header>
         
         <div class="panel-section">
-            <h2>1. Configurar Pregunta</h2>
+            <h2>1. CONFIGURAR PREGUNTA</h2>
             <textarea id="question-input" placeholder="Escribe la pregunta aquí..." rows="3"></textarea>
-            <button id="send-question-btn" class="btn-primary">Enviar Pregunta (Bloqueada)</button>
+            <button id="send-question-btn" class="btn-primary">ENVIAR PREGUNTA (A PANTALLAS)</button>
         </div>
 
         <div class="panel-section">
-            <h2>2. Controles de Botonera</h2>
+            <h2>2. CONTROLES DE BOTONERA</h2>
             <div class="btn-group">
-                <button id="enable-btn" class="btn-success">HABILITAR BOTONES</button>
-                <button id="reset-btn" class="btn-danger">Reiniciar a Lobby</button>
+                <button id="enable-btn" class="btn-success">¡HABILITAR BOTONES!</button>
+                <button id="reset-btn" class="btn-danger">VOLVER A LOBBY</button>
             </div>
         </div>
 
         <div class="panel-section status-board">
-            <h2>Estado en Vivo</h2>
-            <p>Fase actual: <span id="current-status" class="badge">lobby</span></p>
+            <h2>ESTADO EN VIVO</h2>
+            <p>Fase actual: <span id="current-status" class="badge">LOBBY</span></p>
             <div id="winner-display" class="hidden"></div>
         </div>
     </div>
