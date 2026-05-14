@@ -54,3 +54,8 @@ body { font-family: 'Montserrat', sans-serif; background-color: var(--bg-dark); 
 @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
 .pulse-slow { animation: pulse 2.5s infinite; }
 .fw-black { font-weight: 900; }
+
+/* Agrega esto a tu styles.css actual para asegurar el clic en celulares */
+.opt-btn * { 
+    pointer-events: none; 
+}
