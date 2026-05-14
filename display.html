@@ -5,41 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TV SHOW DISPLAY</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- Librería para Confeti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body class="tv-display-body">
-    
     <div class="tv-main-container">
-        <!-- Logo y Header superior -->
         <header class="tv-header">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Banco_Santander_Logotipo.svg/1200px-Banco_Santander_Logotipo.svg.png" class="tv-logo">
         </header>
 
-        <!-- Área Central de Pregunta -->
         <main class="tv-stage">
             <div id="waiting-area" class="tv-waiting">
                 <h2 class="pulse-slow">PREPAREN SUS DISPOSITIVOS</h2>
             </div>
             
             <div id="question-area" class="tv-question-box hidden">
-                <div class="tv-diamond-frame">
+                <div id="tv-frame" class="tv-diamond-frame">
                     <h1 id="display-question-text">¿LISTOS PARA EMPEZAR?</h1>
+                    
+                    <!-- Barra de tiempo (se llena/vacía visualmente) -->
+                    <div id="timer-container" class="timer-container hidden">
+                        <div class="timer-bar"></div>
+                    </div>
                 </div>
             </div>
+
+            <!-- NUEVO: Zona del ganador debajo de la pregunta -->
+            <div id="winner-area" class="winner-banner hidden">
+                <div class="winner-label">¡TURNO DE RESPONDER!</div>
+                <div id="winner-name" class="winner-name-display">NOMBRE</div>
+            </div>
         </main>
-
-        <!-- Footer Informativo -->
-        <footer class="tv-footer">
-            <div class="tv-status-pill">SISTEMA EN LÍNEA</div>
-        </footer>
-    </div>
-
-    <!-- POP-UP ESPECTACULAR -->
-    <div id="winner-popup" class="tv-popup-overlay hidden">
-        <div class="tv-popup-card">
-            <div class="popup-header">¡TURNO DE RESPUESTA!</div>
-            <div id="winner-name" class="popup-name">NOMBRE</div>
-            <div class="popup-glow"></div>
-        </div>
     </div>
 
     <script type="module" src="display.js"></script>
