@@ -14,47 +14,37 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// Elementos del DOM
 const questionInput = document.getElementById('question-input');
-const sendQuestionBtn = document.getElementById('send-question-btn');
-const enableBtn = document.getElementById('enable-btn');
-const resetBtn = document.getElementById('reset-btn');
 const currentStatus = document.getElementById('current-status');
 const winnerDisplay = document.getElementById('winner-display');
-
 let localWinner = "";
 
-// Escuchar cambios en vivo
-const gameRef = ref(db, 'game');
-onValue(gameRef, (snapshot) => {
+onValue(ref(db, 'game'), (snapshot) => {
     const data = snapshot.val();
     if (data) {
-        currentStatus.textContent = data.status;
+        currentStatus.textContent = data.status.toUpperCase();
         if (data.status === 'blocked') {
             localWinner = data.winner;
             winnerDisplay.textContent = `¡${data.winner} PRESIONÓ PRIMERO!`;
             winnerDisplay.className = 'winner-alert active';
         } else {
             winnerDisplay.className = 'hidden';
-            if (data.status === 'lobby') {
-                questionInput.value = "";
-            }
+            if (data.status === 'lobby') questionInput.value = "";
         }
     }
 });
 
 async function updateGameState(status) {
     const text = questionInput.value.trim();
-    await set(gameRef, {
+    await set(ref(db, 'game'), {
         status: status,
         question: text,
         winner: (status === 'lobby' || status === 'reading') ? "" : localWinner
     });
 }
 
-sendQuestionBtn.addEventListener('click', () => updateGameState('reading'));
-enableBtn.addEventListener('click', () => updateGameState('active'));
-resetBtn.addEventListener('click', () => updateGameState('lobby'));
+document.getElementById('send-question-btn').onclick = () => updateGameState('reading');
+document.getElementById('enable-btn').onclick = () => updateGameState('active');
+document.getElementById('reset-btn').onclick = () => updateGameState('lobby');
 
-// Inicializar la base de datos al cargar el admin si está vacía
 updateGameState('lobby');
