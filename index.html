@@ -4,33 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Santander - Jugador</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
-<body class="player-body">
-    <!-- Mitad Superior: Pregunta -->
-    <div class="top-section">
-        <div class="question-frame">
-            <div id="status-message" class="pulse">ESPERANDO...</div>
-            <div id="question-text" class="hidden"></div>
+<body class="player-body bg-dark text-white">
+
+    <!-- MODAL DE INGRESO -->
+    <div id="login-modal" class="custom-modal-overlay">
+        <div class="custom-popup-box">
+            <h2 class="popup-title">INGRESA PARA JUGAR</h2>
+            <div class="mb-3 text-start">
+                <input type="text" id="player-name" class="custom-input text-center fs-3 py-3" placeholder="Tu Nombre" autocomplete="off">
+            </div>
+            <button id="join-btn" class="custom-btn-siguiente w-100">SIGUIENTE</button>
         </div>
     </div>
 
-    <!-- Mitad Inferior: Botón -->
-    <div class="bottom-section">
-        <div id="login-screen" class="login-overlay active">
-            <div class="login-box">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Banco_Santander_Logotipo.svg/1200px-Banco_Santander_Logotipo.svg.png" class="mini-logo">
-                <input type="text" id="player-name" placeholder="Tu Nombre" autocomplete="off">
-                <button id="join-btn" class="btn-primary">ENTRAR</button>
+    <!-- UI DEL JUEGO -->
+    <div id="main-player-ui" class="d-none h-100 flex-column">
+        
+        <!-- HEADER: Pregunta y Tiempo -->
+        <div class="player-header p-3 text-center d-flex flex-column justify-content-center">
+            <div id="status-message" class="pulse fw-bold text-secondary fs-3">ESPERANDO...</div>
+            <h3 id="question-text" class="d-none fw-bold text-white mb-3 mt-2"></h3>
+            
+            <div id="timer-bar-container" class="w-100 bg-secondary rounded-pill overflow-hidden d-none" style="height: 10px;">
+                <div id="timer-bar-fill" class="bg-danger h-100 w-100" style="transition: width 0.1s linear;"></div>
+            </div>
+            <div id="time-left-text" class="fw-bold mt-1 text-danger d-none fs-4">10.0s</div>
+        </div>
+
+        <!-- GRILLA DE ALTERNATIVAS -->
+        <div class="player-options flex-grow-1 p-3">
+            <div class="row h-100 g-3">
+                <div class="col-6 h-50">
+                    <button class="opt-btn w-100 h-100" data-opt="A"><span class="opt-letter">A</span><span class="opt-text" id="p-opt-A"></span></button>
+                </div>
+                <div class="col-6 h-50">
+                    <button class="opt-btn w-100 h-100" data-opt="B"><span class="opt-letter">B</span><span class="opt-text" id="p-opt-B"></span></button>
+                </div>
+                <div class="col-6 h-50">
+                    <button class="opt-btn w-100 h-100" data-opt="C"><span class="opt-letter">C</span><span class="opt-text" id="p-opt-C"></span></button>
+                </div>
+                <div class="col-6 h-50">
+                    <button class="opt-btn w-100 h-100" data-opt="D"><span class="opt-letter">D</span><span class="opt-text" id="p-opt-D"></span></button>
+                </div>
             </div>
         </div>
         
-        <button id="buzzer-btn" class="buzzer-massive disabled" disabled>
-            <div class="buzzer-inner">
-                <span id="buzzer-label">ESPERA</span>
-            </div>
-        </button>
-        <div id="result-message" class="result-label hidden"></div>
+        <!-- FEEDBACK FINAL -->
+        <div id="feedback-bar" class="p-3 text-center fw-bold fs-4 d-none"></div>
     </div>
 
     <script type="module" src="player.js"></script>
