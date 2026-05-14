@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pantalla de Visualización - Trivia</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="display-body">
+    
+    <div class="display-container">
+        <!-- Área de la pregunta -->
+        <div id="question-area" class="question-box hidden">
+            <h1 id="display-question-text">Esperando pregunta...</h1>
+        </div>
+        
+        <!-- Estado de espera (cuando no hay pregunta) -->
+        <div id="waiting-area" class="waiting-box">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Banco_Santander_Logotipo.svg/1200px-Banco_Santander_Logotipo.svg.png" alt="Logo Santander" class="display-logo">
+            <h2 class="pulse">Preparen sus teléfonos...</h2>
+        </div>
+    </div>
+
+    <!-- POP-UP GIGANTE DE GANADOR -->
+    <div id="winner-popup" class="popup-overlay hidden">
+        <div class="popup-content">
+            <h3>¡TURNO DE!</h3>
+            <h1 id="winner-name">NOMBRE</h1>
+        </div>
+    </div>
+
+    <script type="module" src="display.js"></script>
+</body>
+</html>
