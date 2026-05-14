@@ -30,15 +30,15 @@ onValue(ref(db, 'game/status'), (snap) => {
 document.getElementById('btn-launch').onclick = async () => {
     const correctOpt = document.querySelector('input[name="correctOpt"]:checked').value;
     
-    // Limpiamos las respuestas de la ronda anterior
+    // Limpiamos respuestas
     await set(ref(db, 'answers'), null);
     
+    // Eliminamos la dependencia del reloj (endTime)
     await set(ref(db, 'game'), {
         status: 'active',
         question: qInput.value.trim(),
         options: { A: optA.value, B: optB.value, C: optC.value, D: optD.value },
-        correct: correctOpt,
-        endTime: Date.now() + 10500 // 10 segundos + margen de red
+        correct: correctOpt
     });
     
     winnerBox.classList.add('d-none');
@@ -47,7 +47,7 @@ document.getElementById('btn-launch').onclick = async () => {
 document.getElementById('btn-reveal').onclick = async () => {
     await set(ref(db, 'game/status'), 'reveal');
     
-    // Calcular ganador
+    // Calcular el ganador por tiempo de reacción (menor es mejor)
     const snapGame = await get(ref(db, 'game'));
     const snapAns = await get(ref(db, 'answers'));
     const correctAns = snapGame.val().correct;
