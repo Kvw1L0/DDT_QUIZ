@@ -3,29 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pantalla de Visualización - Trivia</title>
+    <title>TV SHOW DISPLAY</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-<body class="display-body">
+<body class="tv-display-body">
     
-    <div class="display-container">
-        <!-- Área de la pregunta -->
-        <div id="question-area" class="question-box hidden">
-            <h1 id="display-question-text">Esperando pregunta...</h1>
-        </div>
-        
-        <!-- Estado de espera (cuando no hay pregunta) -->
-        <div id="waiting-area" class="waiting-box">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Banco_Santander_Logotipo.svg/1200px-Banco_Santander_Logotipo.svg.png" alt="Logo Santander" class="display-logo">
-            <h2 class="pulse">Preparen sus teléfonos...</h2>
-        </div>
+    <div class="tv-main-container">
+        <!-- Logo y Header superior -->
+        <header class="tv-header">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Banco_Santander_Logotipo.svg/1200px-Banco_Santander_Logotipo.svg.png" class="tv-logo">
+        </header>
+
+        <!-- Área Central de Pregunta -->
+        <main class="tv-stage">
+            <div id="waiting-area" class="tv-waiting">
+                <h2 class="pulse-slow">PREPAREN SUS DISPOSITIVOS</h2>
+            </div>
+            
+            <div id="question-area" class="tv-question-box hidden">
+                <div class="tv-diamond-frame">
+                    <h1 id="display-question-text">¿LISTOS PARA EMPEZAR?</h1>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer Informativo -->
+        <footer class="tv-footer">
+            <div class="tv-status-pill">SISTEMA EN LÍNEA</div>
+        </footer>
     </div>
 
-    <!-- POP-UP GIGANTE DE GANADOR -->
-    <div id="winner-popup" class="popup-overlay hidden">
-        <div class="popup-content">
-            <h3>¡TURNO DE!</h3>
-            <h1 id="winner-name">NOMBRE</h1>
+    <!-- POP-UP ESPECTACULAR -->
+    <div id="winner-popup" class="tv-popup-overlay hidden">
+        <div class="tv-popup-card">
+            <div class="popup-header">¡TURNO DE RESPUESTA!</div>
+            <div id="winner-name" class="popup-name">NOMBRE</div>
+            <div class="popup-glow"></div>
         </div>
     </div>
 
