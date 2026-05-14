@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+import { getDatabase, ref, onValue, set, get } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDlx7HxHyPNuXxueFyPjeKn84EpFbgke1Y",
@@ -15,10 +15,12 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 let myName = "";
+let safeName = "";
 let timerInterval = null;
 let hasAnswered = false;
 let myChoice = "";
 let currentGameData = null;
+let questionStartTime = 0; // Para medir tiempo de reacción
 
 const UI = {
     modal: document.getElementById('login-modal'),
@@ -33,8 +35,16 @@ const UI = {
 };
 
 document.getElementById('join-btn').onclick = () => {
-    const n = document.getElementById('player-name').value.trim();
-    if(n) { myName = n; UI.modal.classList.add('d-none'); UI.main.classList.remove('d-none'); UI.main.classList.add('d-flex'); start(); }
+    const rawName = document.getElementById('player-name').value.trim();
+    // Limpiamos el nombre de caracteres no válidos para Firebase
+    safeName = rawName.replace(/[.#$\[\]]/g, '').trim(); 
+    if(safeName) { 
+        myName = safeName; 
+        UI.modal.classList.add('d-none'); 
+        UI.main.classList.remove('d-none'); 
+        UI.main.classList.add('d-flex'); 
+        start(); 
+    }
 };
 
 function start() {
@@ -50,31 +60,39 @@ function start() {
             UI.status.classList.remove('d-none');
         } 
         else if(s === 'active') {
-            if(UI.status.textContent !== "¡A RESPONDER!") resetUI(); // Reset if coming fresh
-            UI.status.classList.add('d-none');
-            UI.qText.textContent = currentGameData.question;
-            UI.qText.classList.remove('d-none');
-            
-            document.getElementById('p-opt-A').textContent = currentGameData.options.A;
-            document.getElementById('p-opt-B').textContent = currentGameData.options.B;
-            document.getElementById('p-opt-C').textContent = currentGameData.options.C;
-            document.getElementById('p-opt-D').textContent = currentGameData.options.D;
-            
-            UI.timerContainer.classList.remove('d-none');
-            UI.timerText.classList.remove('d-none');
-            
-            if(!hasAnswered) enableButtons(true);
-            startTimer(currentGameData.endTime);
+            // Verificamos si es una pregunta nueva verificando si el texto estaba oculto
+            if(UI.qText.classList.contains('d-none')) {
+                resetUI();
+                UI.status.classList.add('d-none');
+                
+                UI.qText.textContent = currentGameData.question;
+                UI.qText.classList.remove('d-none');
+                
+                document.getElementById('p-opt-A').textContent = currentGameData.options.A;
+                document.getElementById('p-opt-B').textContent = currentGameData.options.B;
+                document.getElementById('p-opt-C').textContent = currentGameData.options.C;
+                document.getElementById('p-opt-D').textContent = currentGameData.options.D;
+                
+                UI.timerContainer.classList.remove('d-none');
+                UI.timerText.classList.remove('d-none');
+                
+                enableButtons(true);
+                startTimer(10); // 10 Segundos exactos locales
+            }
         }
         else if(s === 'reveal') {
             clearInterval(timerInterval);
             enableButtons(false);
             
-            // Pintar botones
+            // Pintar botones según resultados
             UI.btns.forEach(b => {
-                if(b.dataset.opt === currentGameData.correct) b.classList.add('correct-ans');
-                else if(b.dataset.opt === myChoice) b.classList.add('wrong-ans');
-                else b.style.opacity = '0.5';
+                if(b.dataset.opt === currentGameData.correct) {
+                    b.classList.add('correct-ans');
+                } else if(b.dataset.opt === myChoice) {
+                    b.classList.add('wrong-ans');
+                } else {
+                    b.style.opacity = '0.4';
+                }
             });
 
             UI.feedback.classList.remove('d-none');
@@ -90,22 +108,25 @@ function start() {
     });
 }
 
-function startTimer(endTime) {
+function startTimer(seconds) {
+    questionStartTime = Date.now();
     clearInterval(timerInterval);
+    let left = seconds * 1000;
+    const step = 50;
+    
     timerInterval = setInterval(() => {
-        const now = Date.now();
-        const left = Math.max(0, endTime - now);
-        const percent = (left / 10000) * 100;
+        left -= step;
+        const percent = (left / (seconds * 1000)) * 100;
         
-        UI.timerFill.style.width = `${percent}%`;
-        UI.timerText.textContent = (left / 1000).toFixed(1) + "s";
+        UI.timerFill.style.width = `${Math.max(0, percent)}%`;
+        UI.timerText.textContent = (Math.max(0, left) / 1000).toFixed(1) + "s";
         
         if(left <= 0) {
             clearInterval(timerInterval);
             enableButtons(false);
             if(!hasAnswered) { UI.timerText.textContent = "¡TIEMPO!"; }
         }
-    }, 50);
+    }, step);
 }
 
 UI.btns.forEach(btn => {
@@ -116,12 +137,20 @@ UI.btns.forEach(btn => {
         myChoice = btn.dataset.opt;
         enableButtons(false);
         btn.classList.add('selected-ans');
+        
         if("vibrate" in navigator) navigator.vibrate(50);
         
-        await set(ref(db, `answers/${myName}`), {
-            val: myChoice,
-            time: Date.now()
-        });
+        // Calculamos tiempo de reacción local
+        const reactionTime = Date.now() - questionStartTime;
+        
+        try {
+            await set(ref(db, `answers/${safeName}`), {
+                val: myChoice,
+                time: reactionTime // Enviamos la latencia
+            });
+        } catch (error) {
+            console.error("Error al guardar respuesta:", error);
+        }
     };
 });
 
@@ -134,7 +163,7 @@ function resetUI() {
     UI.timerText.classList.add('d-none');
     UI.feedback.classList.add('d-none');
     UI.btns.forEach(b => {
-        b.className = 'opt-btn w-100 h-100';
+        b.className = 'opt-btn w-100 h-100'; // Limpia los colores
         b.style.opacity = '1';
         b.disabled = true;
         b.querySelector('.opt-text').textContent = "";
