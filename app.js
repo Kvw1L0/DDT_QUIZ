@@ -8,105 +8,146 @@ import {
 
 import { questions } from "./questions.js";
 
-let playerName = "";
+document.addEventListener("DOMContentLoaded", () => {
 
-const gameRef = ref(db, "game");
+  let playerName = "";
 
-const loginScreen = document.getElementById("loginScreen");
-const gameScreen = document.getElementById("gameScreen");
+  const gameRef = ref(db, "game");
 
-const questionText = document.getElementById("questionText");
-const statusText = document.getElementById("statusText");
-const buzzBtn = document.getElementById("buzzBtn");
+  const loginScreen =
+    document.getElementById("loginScreen");
 
-window.joinGame = () => {
+  const gameScreen =
+    document.getElementById("gameScreen");
 
-  const input = document.getElementById("nameInput");
+  const joinBtn =
+    document.getElementById("joinBtn");
 
-  playerName = input.value.trim();
+  const buzzBtn =
+    document.getElementById("buzzBtn");
 
-  if (!playerName) {
-    alert("Ingresa tu nombre");
-    return;
-  }
+  const questionText =
+    document.getElementById("questionText");
 
-  loginScreen.classList.add("hidden");
-  gameScreen.classList.remove("hidden");
-};
+  const statusText =
+    document.getElementById("statusText");
 
-buzzBtn.addEventListener("click", () => {
+  const nameInput =
+    document.getElementById("nameInput");
 
-  runTransaction(gameRef, (game) => {
+  // JOIN
 
-    if (
-      game &&
-      game.buzzerEnabled &&
-      !game.winner
-    ) {
+  joinBtn.addEventListener("click", () => {
 
-      game.buzzerEnabled = false;
-      game.winner = playerName;
+    playerName =
+      nameInput.value.trim();
 
-      return game;
+    if (!playerName) {
+
+      alert("Ingresa tu nombre");
+
+      return;
     }
 
-    return;
+    loginScreen.classList.add("hidden");
+
+    gameScreen.classList.remove("hidden");
 
   });
 
-});
+  // BUZZ
 
-onValue(gameRef, (snapshot) => {
+  buzzBtn.addEventListener("click", () => {
 
-  const game = snapshot.val();
+    runTransaction(gameRef, (game) => {
 
-  if (!game) return;
+      if (
+        game &&
+        game.buzzerEnabled &&
+        !game.winner
+      ) {
 
-  const currentQuestion =
-    typeof game.currentQuestion === "number"
-      ? game.currentQuestion
-      : 0;
+        game.buzzerEnabled = false;
 
-  const q = questions[currentQuestion];
+        game.winner = playerName;
 
-  if (q) {
-    questionText.innerText = q.question;
-  }
+        return game;
+      }
 
-  if (!game.buzzerEnabled && !game.winner) {
+      return;
 
-    buzzBtn.disabled = true;
+    });
 
-    statusText.innerText =
-      "⏳ Esperando que el animador habilite respuestas";
+  });
 
-  }
+  // REALTIME
 
-  if (game.buzzerEnabled) {
+  onValue(gameRef, (snapshot) => {
 
-    buzzBtn.disabled = false;
+    const game = snapshot.val();
 
-    statusText.innerText =
-      "🚨 ¡PRESIONA PARA RESPONDER!";
+    if (!game) return;
 
-  }
+    const currentQuestion =
+      game.currentQuestion || 0;
 
-  if (game.winner) {
+    const q =
+      questions[currentQuestion];
 
-    buzzBtn.disabled = true;
+    if (q) {
 
-    if (game.winner === playerName) {
-
-      statusText.innerText =
-        "🔥 ¡Fuiste el primero!";
-
-    } else {
-
-      statusText.innerText =
-        `⚡ ${game.winner} respondió primero`;
+      questionText.innerText =
+        q.question;
 
     }
 
-  }
+    // STATUS
+
+    if (
+      !game.buzzerEnabled &&
+      !game.winner
+    ) {
+
+      buzzBtn.disabled = true;
+
+      statusText.innerText =
+        "⏳ Esperando habilitación";
+
+    }
+
+    if (
+      game.buzzerEnabled
+    ) {
+
+      buzzBtn.disabled = false;
+
+      statusText.innerText =
+        "🚨 ¡RESPONDE!";
+
+    }
+
+    if (
+      game.winner
+    ) {
+
+      buzzBtn.disabled = true;
+
+      if (
+        game.winner === playerName
+      ) {
+
+        statusText.innerText =
+          "🔥 ¡Fuiste el primero!";
+
+      } else {
+
+        statusText.innerText =
+          `⚡ ${game.winner} respondió primero`;
+
+      }
+
+    }
+
+  });
 
 });
