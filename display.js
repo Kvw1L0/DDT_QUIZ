@@ -17,8 +17,10 @@ const db = getDatabase(app);
 const qArea = document.getElementById('question-area');
 const wArea = document.getElementById('waiting-area');
 const qDisplay = document.getElementById('display-question-text');
-const popup = document.getElementById('winner-popup');
+const winnerArea = document.getElementById('winner-area');
 const wName = document.getElementById('winner-name');
+const tvFrame = document.getElementById('tv-frame');
+const timerContainer = document.getElementById('timer-container');
 
 onValue(ref(db, 'game'), (snap) => {
     const data = snap.val();
@@ -27,14 +29,37 @@ onValue(ref(db, 'game'), (snap) => {
     if(data.status === 'lobby') {
         wArea.classList.remove('hidden');
         qArea.classList.add('hidden');
-        popup.classList.add('hidden');
-    } else if(data.status === 'reading' || data.status === 'active') {
+        winnerArea.classList.add('hidden');
+        tvFrame.classList.remove('heartbeat-border');
+        timerContainer.classList.add('hidden');
+    } 
+    else if(data.status === 'reading') {
         wArea.classList.add('hidden');
         qArea.classList.remove('hidden');
+        winnerArea.classList.add('hidden');
         qDisplay.textContent = data.question;
-        popup.classList.add('hidden');
-    } else if(data.status === 'blocked') {
+        tvFrame.classList.remove('heartbeat-border');
+        timerContainer.classList.add('hidden');
+    } 
+    else if(data.status === 'active') {
+        wArea.classList.add('hidden');
+        qArea.classList.remove('hidden');
+        winnerArea.classList.add('hidden');
+        tvFrame.classList.add('heartbeat-border'); // Activa latido
+        timerContainer.classList.remove('hidden'); // Activa barra de tiempo
+    } 
+    else if(data.status === 'blocked') {
+        tvFrame.classList.remove('heartbeat-border');
+        timerContainer.classList.add('hidden');
         wName.textContent = data.winner;
-        popup.classList.remove('hidden');
+        winnerArea.classList.remove('hidden');
+        
+        // Disparar Confeti Santander
+        confetti({
+            particleCount: 150,
+            spread: 80,
+            origin: { y: 0.6 },
+            colors: ['#ec0000', '#ffffff', '#ffd700']
+        });
     }
 });
