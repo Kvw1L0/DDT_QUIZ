@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Botonera Interactiva</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Pantalla de Login -->
+    <div id="login-screen" class="screen active">
+        <h1>Botonera Interactiva</h1>
+        <input type="text" id="player-name" placeholder="Ingresa tu nombre" autocomplete="off">
+        <button id="join-btn" class="btn-primary">Entrar al Juego</button>
+    </div>
+
+    <!-- Pantalla de Juego -->
+    <div id="game-screen" class="screen hidden">
+        <h2 id="player-display"></h2>
+        
+        <div id="status-message" class="pulse">Esperando al administrador...</div>
+        <div id="question-text" class="hidden"></div>
+        
+        <button id="buzzer-btn" class="buzzer disabled" disabled>
+            <span>ESPERA</span>
+        </button>
+
+        <div id="result-message" class="hidden"></div>
+    </div>
+
+    <script type="module" src="player.js"></script>
+</body>
+</html>
