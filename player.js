@@ -14,88 +14,59 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// Elementos del DOM
+// Assets
+const audioClick = new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3');
+
+// DOM
 const loginScreen = document.getElementById('login-screen');
-const gameScreen = document.getElementById('game-screen');
-const playerNameInput = document.getElementById('player-name');
-const joinBtn = document.getElementById('join-btn');
-const playerDisplay = document.getElementById('player-display');
-const statusMessage = document.getElementById('status-message');
-const questionText = document.getElementById('question-text');
-const buzzerBtn = document.getElementById('buzzer-btn');
-const resultMessage = document.getElementById('result-message');
+const playerBtn = document.getElementById('buzzer-btn');
+const label = document.getElementById('buzzer-label');
+const qText = document.getElementById('question-text');
+const statusMsg = document.getElementById('status-message');
 
 let myName = "";
 
-joinBtn.addEventListener('click', () => {
-    const name = playerNameInput.value.trim();
-    if (name) {
-        myName = name;
-        playerDisplay.textContent = `Jugador: ${myName}`;
-        loginScreen.classList.remove('active');
-        loginScreen.classList.add('hidden');
-        gameScreen.classList.remove('hidden');
-        gameScreen.classList.add('active');
-        listenToGame();
-    }
-});
+document.getElementById('join-btn').onclick = () => {
+    const n = document.getElementById('player-name').value.trim();
+    if(n) { myName = n; loginScreen.classList.remove('active'); loginScreen.classList.add('hidden'); start(); }
+};
 
-function listenToGame() {
-    const gameRef = ref(db, 'game');
-    onValue(gameRef, (snapshot) => {
-        const data = snapshot.val();
-        if (!data) return;
+function start() {
+    onValue(ref(db, 'game'), (snap) => {
+        const data = snap.val();
+        if(!data) return;
 
-        // Actualizar UI según el estado
-        if (data.status === 'lobby') {
-            statusMessage.textContent = "Esperando al administrador...";
-            statusMessage.classList.remove('hidden');
-            questionText.classList.add('hidden');
-            resultMessage.classList.add('hidden');
-            setBuzzerState('disabled', 'ESPERA');
-        } 
-        else if (data.status === 'reading') {
-            statusMessage.classList.add('hidden');
-            questionText.textContent = data.question;
-            questionText.classList.remove('hidden');
-            resultMessage.classList.add('hidden');
-            setBuzzerState('disabled', 'ESPERA');
-        } 
-        else if (data.status === 'active') {
-            setBuzzerState('active', '¡PRESIONA!');
-            if ("vibrate" in navigator) navigator.vibrate(200);
-        } 
-        else if (data.status === 'blocked') {
-            if (data.winner === myName) {
-                setBuzzerState('winner', '¡FUISTE PRIMERO!');
-                resultMessage.textContent = "¡Es tu turno de responder!";
-                if ("vibrate" in navigator) navigator.vibrate([200, 100, 200]);
-            } else {
-                setBuzzerState('loser', 'BLOQUEADO');
-                resultMessage.textContent = `Ganó el turno: ${data.winner}`;
-            }
-            resultMessage.classList.remove('hidden');
+        if(data.status === 'lobby') {
+            qText.classList.add('hidden');
+            statusMsg.classList.remove('hidden');
+            updateBtn('disabled', 'ESPERA');
+        } else if(data.status === 'reading') {
+            qText.textContent = data.question;
+            qText.classList.remove('hidden');
+            statusMsg.classList.add('hidden');
+            updateBtn('disabled', 'ATENTOS');
+        } else if(data.status === 'active') {
+            updateBtn('active', '¡YA!');
+        } else if(data.status === 'blocked') {
+            const isMe = data.winner === myName;
+            updateBtn(isMe ? 'winner' : 'loser', isMe ? '¡TUYO!' : '---');
         }
     });
 }
 
-function setBuzzerState(state, text) {
-    buzzerBtn.className = `buzzer ${state}`;
-    buzzerBtn.disabled = state !== 'active';
-    buzzerBtn.querySelector('span').textContent = text;
+function updateBtn(state, text) {
+    playerBtn.className = `buzzer-massive ${state}`;
+    playerBtn.disabled = state !== 'active';
+    label.textContent = text;
 }
 
-buzzerBtn.addEventListener('click', async () => {
-    const gameRef = ref(db, 'game');
-    const snapshot = await get(gameRef);
-    const currentState = snapshot.val();
-
-    // Validamos que el juego siga activo antes de registrar el clic
-    if (currentState && currentState.status === 'active') {
-        await set(gameRef, {
-            ...currentState,
-            status: 'blocked',
-            winner: myName
-        });
+playerBtn.onclick = async () => {
+    const snap = await get(ref(db, 'game'));
+    if(snap.val().status === 'active') {
+        // Feedback
+        if ("vibrate" in navigator) navigator.vibrate([100, 50, 100]);
+        audioClick.play();
+        
+        await set(ref(db, 'game'), { ...snap.val(), status: 'blocked', winner: myName });
     }
-});
+};
