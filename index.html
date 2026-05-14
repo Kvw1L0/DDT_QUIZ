@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>Buzzer Players</title>
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+<!-- LOGIN -->
+
+<div id="loginScreen" class="center">
+
+  <h1>🎮 QUIZ GAME</h1>
+
+  <input
+    id="nameInput"
+    placeholder="Tu nombre"
+  >
+
+  <button onclick="joinGame()">
+    ENTRAR
+  </button>
+
+</div>
+
+<!-- GAME -->
+
+<div id="gameScreen" class="hidden">
+
+  <div class="questionBox">
+
+    <div class="questionLabel">
+      PREGUNTA
+    </div>
+
+    <div
+      id="questionText"
+      class="questionText"
+    >
+      Esperando pregunta...
+    </div>
+
+  </div>
+
+  <div
+    id="statusText"
+    class="statusText"
+  >
+    Esperando...
+  </div>
+
+  <button
+    id="buzzBtn"
+    class="buzzBtn"
+  >
+    ¡RESPONDER!
+  </button>
+
+</div>
+
+<script type="module" src="app.js"></script>
+
+</body>
+</html>
