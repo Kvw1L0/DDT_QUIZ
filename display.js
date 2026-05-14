@@ -1,7 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
-// Tu configuración de Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyDlx7HxHyPNuXxueFyPjeKn84EpFbgke1Y",
   authDomain: "buzzer-67109.firebaseapp.com",
@@ -12,49 +11,30 @@ const firebaseConfig = {
   appId: "1:925012683826:web:f200286df975b4969a602b"
 };
 
-// Inicializar Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// Elementos del DOM
-const questionArea = document.getElementById('question-area');
-const displayQuestionText = document.getElementById('display-question-text');
-const waitingArea = document.getElementById('waiting-area');
-const winnerPopup = document.getElementById('winner-popup');
-const winnerName = document.getElementById('winner-name');
+const qArea = document.getElementById('question-area');
+const wArea = document.getElementById('waiting-area');
+const qDisplay = document.getElementById('display-question-text');
+const popup = document.getElementById('winner-popup');
+const wName = document.getElementById('winner-name');
 
-// Escuchar cambios en la base de datos en tiempo real
-const gameRef = ref(db, 'game');
-onValue(gameRef, (snapshot) => {
-    const data = snapshot.val();
-    if (!data) return;
+onValue(ref(db, 'game'), (snap) => {
+    const data = snap.val();
+    if(!data) return;
 
-    // Lógica para mostrar pregunta o pantalla de espera
-    if (data.status === 'lobby') {
-        waitingArea.classList.remove('hidden');
-        questionArea.classList.add('hidden');
-        closePopup(); // Asegurar que el popup esté cerrado en lobby
-    } 
-    else if (data.status === 'reading' || data.status === 'active') {
-        waitingArea.classList.add('hidden');
-        questionArea.classList.remove('hidden');
-        displayQuestionText.textContent = data.question;
-        closePopup(); // Asegurar que el popup esté cerrado al leer nueva pregunta
-    }
-    // LÓGICA DEL POP-UP CUANDO ALGUIEN PRESIONA (blocked)
-    else if (data.status === 'blocked') {
-        if (data.winner) {
-            showWinnerPopup(data.winner);
-        }
+    if(data.status === 'lobby') {
+        wArea.classList.remove('hidden');
+        qArea.classList.add('hidden');
+        popup.classList.add('hidden');
+    } else if(data.status === 'reading' || data.status === 'active') {
+        wArea.classList.add('hidden');
+        qArea.classList.remove('hidden');
+        qDisplay.textContent = data.question;
+        popup.classList.add('hidden');
+    } else if(data.status === 'blocked') {
+        wName.textContent = data.winner;
+        popup.classList.remove('hidden');
     }
 });
-
-function showWinnerPopup(name) {
-    winnerName.textContent = name;
-    winnerPopup.classList.remove('hidden');
-    // Sonido opcional aquí si quisieras
-}
-
-function closePopup() {
-    winnerPopup.classList.add('hidden');
-}
