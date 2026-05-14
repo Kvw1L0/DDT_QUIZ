@@ -4,38 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TV SHOW DISPLAY</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    <!-- Librería para Confeti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body class="tv-display-body">
-    <div class="tv-main-container">
-        <header class="tv-header">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Banco_Santander_Logotipo.svg/1200px-Banco_Santander_Logotipo.svg.png" class="tv-logo">
-        </header>
+    
+    <div class="container-fluid h-100 d-flex flex-column p-5">
+        <!-- Logo Header -->
+        <div class="text-center mb-4">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Banco_Santander_Logotipo.svg/1200px-Banco_Santander_Logotipo.svg.png" class="tv-logo" alt="Santander">
+        </div>
 
-        <main class="tv-stage">
-            <div id="waiting-area" class="tv-waiting">
-                <h2 class="pulse-slow">PREPAREN SUS DISPOSITIVOS</h2>
+        <!-- Escenario -->
+        <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center w-100">
+            
+            <div id="waiting-area" class="text-center">
+                <h2 class="pulse-slow display-2 fw-light text-white-50">ESPERANDO PREGUNTA</h2>
             </div>
             
-            <div id="question-area" class="tv-question-box hidden">
-                <div id="tv-frame" class="tv-diamond-frame">
-                    <h1 id="display-question-text">¿LISTOS PARA EMPEZAR?</h1>
+            <!-- Contenedor Principal Trivia -->
+            <div id="trivia-area" class="w-100 d-none" style="max-width: 1400px;">
+                
+                <!-- Pregunta -->
+                <div class="tv-diamond-frame text-center mb-5 p-5">
+                    <h1 id="tv-question" class="display-3 fw-black text-white text-uppercase m-0"></h1>
                     
-                    <!-- Barra de tiempo (se llena/vacía visualmente) -->
-                    <div id="timer-container" class="timer-container hidden">
-                        <div class="timer-bar"></div>
-                    </div>
+                    <!-- Reloj TV -->
+                    <div id="tv-clock" class="tv-clock-circle mx-auto mt-4 d-none">10</div>
+                </div>
+
+                <!-- 4 Alternativas -->
+                <div class="row g-4 mt-2">
+                    <div class="col-6"><div id="tv-opt-A" class="tv-opt-box"><span class="letter">A:</span> <span class="text"></span></div></div>
+                    <div class="col-6"><div id="tv-opt-B" class="tv-opt-box"><span class="letter">B:</span> <span class="text"></span></div></div>
+                    <div class="col-6"><div id="tv-opt-C" class="tv-opt-box"><span class="letter">C:</span> <span class="text"></span></div></div>
+                    <div class="col-6"><div id="tv-opt-D" class="tv-opt-box"><span class="letter">D:</span> <span class="text"></span></div></div>
                 </div>
             </div>
 
-            <!-- NUEVO: Zona del ganador debajo de la pregunta -->
-            <div id="winner-area" class="winner-banner hidden">
-                <div class="winner-label">¡TURNO DE RESPONDER!</div>
-                <div id="winner-name" class="winner-name-display">NOMBRE</div>
+            <!-- Ganador Final -->
+            <div id="winner-banner" class="winner-banner w-100 text-center d-none mt-5">
+                <h3 class="text-warning tracking-wider mb-2">¡MÁS RÁPIDO EN ACERTAR!</h3>
+                <h1 id="winner-name-tv" class="display-1 fw-black text-white text-uppercase m-0">NOMBRE</h1>
             </div>
-        </main>
+
+        </div>
     </div>
 
     <script type="module" src="display.js"></script>
