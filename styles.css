@@ -1,72 +1,56 @@
 :root {
     --santander-red: #ec0000;
     --santander-dark: #b30000;
-    --tv-bg: #050505;
-    --gold: #ffd700;
+    --bg-dark: #0a0a0a;
 }
+body { font-family: 'Montserrat', sans-serif; background-color: var(--bg-dark); }
 
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Arial Black', Gadget, sans-serif; }
-.hidden { display: none !important; }
-.pulse { animation: pulse 1.5s infinite; }
-.pulse-slow { animation: pulse 2.5s infinite; color: #aaa; font-weight: 300; font-size: 3rem;}
+/* POPUP LOGIN */
+.custom-modal-overlay { position: fixed; inset: 0; background: radial-gradient(circle at center, rgba(30,0,0,0.9) 0%, rgba(0,0,0,0.95) 100%); background-image: radial-gradient(#222 15%, transparent 16%), radial-gradient(#222 15%, transparent 16%); background-size: 20px 20px; display: flex; justify-content: center; align-items: center; z-index: 1050; }
+.custom-popup-box { background-color: #0f0f0f; border: 3px solid var(--santander-red); border-radius: 12px; padding: 40px 30px; width: 90%; max-width: 400px; box-shadow: 0 0 25px rgba(236, 0, 0, 0.4); animation: popupIn 0.3s ease-out; }
+.popup-title { color: var(--santander-red); font-weight: 900; font-size: 1.5rem; text-align: center; margin-bottom: 25px; }
+.custom-input { background-color: #1a1a1a; border: 1px solid #333; color: #fff; width: 100%; border-radius: 6px; outline: none; transition: 0.2s; }
+.custom-input:focus { border-color: var(--santander-red); box-shadow: 0 0 10px rgba(236, 0, 0, 0.3); }
+.custom-btn-siguiente { background-color: var(--santander-red); color: #fff; border: none; padding: 14px; border-radius: 6px; font-weight: 900; font-size: 1.2rem; transition: 0.2s; }
+.custom-btn-siguiente:active { transform: scale(0.96); background-color: var(--santander-dark); }
 
-/* --- PLAYER UI --- */
-.player-body { background: #000; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
-.top-section { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; background: linear-gradient(to bottom, #1a1a1a, #000); }
-.question-frame { width: 100%; height: 80%; border: 3px solid var(--santander-red); border-radius: 15px; display: flex; align-items: center; justify-content: center; padding: 20px; text-align: center; background: rgba(236, 0, 0, 0.05); box-shadow: inset 0 0 20px rgba(236, 0, 0, 0.2); }
-#question-text { font-size: 1.8rem; color: #fff; font-weight: bold; line-height: 1.2; }
-.bottom-section { flex: 1; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
-.buzzer-massive { width: 220px; height: 220px; border-radius: 50%; background: #222; border: none; padding: 15px; cursor: pointer; transition: all 0.1s; }
-.buzzer-inner { width: 100%; height: 100%; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 0 #111; }
-.buzzer-massive.active .buzzer-inner { background: var(--santander-red); box-shadow: 0 12px 0 var(--santander-dark), 0 20px 40px rgba(236, 0, 0, 0.5); animation: heartbeat 1s infinite; }
-.buzzer-massive.active:active .buzzer-inner { transform: translateY(10px); box-shadow: 0 2px 0 var(--santander-dark); }
-.buzzer-massive.disabled .buzzer-inner { background: #333; box-shadow: none; }
-.buzzer-massive.winner .buzzer-inner { background: #fff; box-shadow: 0 0 50px rgba(255, 255, 255, 0.8); }
-.buzzer-massive.winner #buzzer-label { color: var(--santander-red); }
-#buzzer-label { color: #fff; font-size: 1.5rem; font-weight: 900; }
-.login-overlay { position: absolute; inset: 0; background: #000; z-index: 10; display: flex; align-items: center; justify-content: center; }
-.login-box { width: 80%; text-align: center; }
-.mini-logo { width: 150px; margin-bottom: 20px; }
-.login-box input { width: 100%; padding: 15px; border-radius: 30px; border: 2px solid var(--santander-red); background: #111; color: #fff; text-align: center; font-size: 1.2rem; margin-bottom: 15px; }
+/* CELULAR - JUGADOR */
+.player-header { border-bottom: 2px solid #222; background: linear-gradient(to bottom, #1a1a1a, #000); min-height: 30vh; }
+.opt-btn { background: #111; border: 2px solid #333; border-radius: 12px; color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 10px; transition: all 0.2s; outline: none; }
+.opt-btn:disabled { cursor: not-allowed; }
+.opt-btn:not(:disabled):active { transform: scale(0.95); background: #222; }
+.opt-letter { color: var(--santander-red); font-weight: 900; font-size: 1.5rem; margin-bottom: 5px; }
+.opt-text { font-size: 1.1rem; font-weight: 700; word-break: break-word; line-height: 1.1; }
 
-/* --- TV DISPLAY UI --- */
-.tv-display-body { background: radial-gradient(circle at center, #1a0000 0%, #050505 100%); height: 100vh; display: flex; justify-content: center; align-items: center; color: #fff; overflow: hidden; }
-.tv-main-container { width: 90%; height: 90%; display: flex; flex-direction: column; align-items: center; }
-.tv-header { margin-bottom: 40px; }
-.tv-logo { width: 450px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.2)); }
-.tv-stage { display: flex; flex-direction: column; align-items: center; width: 100%; }
-.tv-diamond-frame { background: rgba(0,0,0,0.6); border: 4px solid var(--santander-red); padding: 50px 80px; border-radius: 50px; position: relative; box-shadow: 0 0 40px rgba(236, 0, 0, 0.3), inset 0 0 40px rgba(236, 0, 0, 0.2); transition: all 0.3s ease; margin-bottom: 30px; width: 100%; max-width: 1200px; }
-#display-question-text { font-size: 4rem; text-transform: uppercase; text-align: center; letter-spacing: 2px; text-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+.selected-ans { border-color: #ffd700; box-shadow: inset 0 0 15px rgba(255, 215, 0, 0.2); background: rgba(255, 215, 0, 0.1); }
+.correct-ans { background: #28a745 !important; border-color: #fff !important; color: white !important; }
+.correct-ans .opt-letter { color: white; }
+.wrong-ans { background: var(--santander-red) !important; border-color: #fff !important; }
+.wrong-ans .opt-letter { color: white; }
 
-/* --- EFECTOS DISPLAY --- */
-.heartbeat-border { animation: border-pulse 1s infinite; border-color: #ff3333; box-shadow: 0 0 60px rgba(236, 0, 0, 0.8), inset 0 0 60px rgba(236, 0, 0, 0.5); }
-.timer-container { width: 100%; height: 15px; background: #222; border-radius: 10px; margin-top: 30px; overflow: hidden; }
-.timer-bar { height: 100%; background: var(--santander-red); width: 100%; animation: shrink 10s linear forwards; }
+/* PANTALLA GIGANTE - TV SHOW */
+.tv-display-body { background: radial-gradient(circle at center, #1a0000 0%, #050505 100%); }
+.tv-logo { max-width: 350px; filter: drop-shadow(0 0 15px rgba(255,255,255,0.1)); }
+.tv-diamond-frame { background: rgba(0, 0, 0, 0.7); border: 4px solid var(--santander-red); border-radius: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.8), inset 0 0 30px rgba(236, 0, 0, 0.3); backdrop-filter: blur(10px); }
 
-/* --- CARTEL GANADOR (DEBAJO DE PREGUNTA) --- */
-.winner-banner { background: linear-gradient(90deg, transparent, rgba(236,0,0,0.9), transparent); width: 100%; text-align: center; padding: 20px 0; animation: slideUp 0.5s ease-out; }
-.winner-label { font-size: 1.5rem; color: var(--gold); letter-spacing: 5px; margin-bottom: 5px; }
-.winner-name-display { font-size: 6rem; font-weight: 900; color: #fff; text-shadow: 0 5px 15px rgba(0,0,0,0.8); text-transform: uppercase; line-height: 1; }
+.tv-clock-circle { width: 100px; height: 100px; border-radius: 50%; background: #111; border: 4px solid var(--santander-red); color: white; display: flex; justify-content: center; align-items: center; font-size: 3rem; font-weight: 900; box-shadow: 0 0 20px rgba(236,0,0,0.5); }
 
-/* --- ADMIN UI --- */
-.admin-body { background: #111; color: #fff; padding: 20px; font-family: 'Segoe UI', sans-serif; }
-.admin-container { max-width: 800px; margin: 0 auto; }
-.admin-header { display: flex; align-items: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 20px; }
-.admin-header img { width: 180px; margin-right: 20px; }
+.tv-opt-box { background: linear-gradient(90deg, #111, #1a1a1a, #111); border: 3px solid var(--santander-red); border-radius: 50px; padding: 25px 40px; font-size: 2.5rem; font-weight: 700; color: white; display: flex; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.5); transition: 0.5s all; }
+.tv-opt-box .letter { color: var(--santander-red); margin-right: 20px; font-weight: 900; }
+.correct-tv { background: #28a745; border-color: #fff; box-shadow: 0 0 50px rgba(40, 167, 69, 0.8); transform: scale(1.05); }
+.correct-tv .letter { color: white; }
+
+.winner-banner { background: linear-gradient(90deg, transparent, rgba(236,0,0,0.9), transparent); animation: slideUp 0.5s ease-out; padding: 30px 0; }
+.tracking-wider { letter-spacing: 0.2em; }
+
+/* ADMIN */
+.admin-body { background: #111; color: #fff; }
 .panel-section { background: #1e1e1e; padding: 25px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #333; }
-.panel-section h2 { font-size: 1.1rem; color: #aaa; margin-bottom: 15px; }
-textarea { width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #444; background: #000; color: white; font-size: 1.2rem; resize: none; outline: none; margin-bottom: 15px; }
-textarea:focus { border-color: var(--santander-red); }
-.btn-primary { width: 100%; padding: 15px; background: var(--santander-red); color: white; border: none; border-radius: 8px; font-size: 1.2rem; font-weight: bold; cursor: pointer; }
-.btn-group { display: flex; gap: 15px; }
-.btn-success { flex: 2; padding: 18px; background: #28a745; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 1.2rem; cursor: pointer; }
-.btn-danger { flex: 1; padding: 18px; background: #555; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
-.badge { background: var(--santander-red); padding: 4px 10px; border-radius: 4px; }
-.winner-alert { background: rgba(236, 0, 0, 0.2); border: 2px solid var(--santander-red); color: var(--gold); padding: 20px; border-radius: 8px; font-size: 1.5rem; text-align: center; margin-top: 20px; font-family: 'Arial Black', sans-serif;}
+.admin-opt-input { background: #000; color: white; border: 1px solid #444; }
+.admin-opt-input:focus { background: #111; color: white; border-color: var(--santander-red); box-shadow: none; }
 
-/* Animaciones Clave */
-@keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-@keyframes border-pulse { 0%, 100% { box-shadow: 0 0 40px rgba(236, 0, 0, 0.4), inset 0 0 40px rgba(236, 0, 0, 0.2); } 50% { box-shadow: 0 0 80px rgba(236, 0, 0, 0.9), inset 0 0 80px rgba(236, 0, 0, 0.6); } }
-@keyframes shrink { from { width: 100%; } to { width: 0%; } }
-@keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+@keyframes popupIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+.pulse-slow { animation: pulse 2.5s infinite; }
+.fw-black { font-weight: 900; }
