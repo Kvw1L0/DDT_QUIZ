@@ -43,25 +43,26 @@ onValue(ref(db, 'game'), (snap) => {
         resetOptions();
     } 
     else if(data.status === 'active') {
-        resetOptions();
-        UI.wait.classList.add('d-none');
-        UI.trivia.classList.remove('d-none');
-        UI.winner.classList.add('d-none');
-        
-        UI.q.textContent = data.question;
-        UI.opts.A.querySelector('.text').textContent = data.options.A;
-        UI.opts.B.querySelector('.text').textContent = data.options.B;
-        UI.opts.C.querySelector('.text').textContent = data.options.C;
-        UI.opts.D.querySelector('.text').textContent = data.options.D;
-        
-        UI.clock.classList.remove('d-none');
-        startTvClock(data.endTime);
+        if(UI.trivia.classList.contains('d-none')) {
+            resetOptions();
+            UI.wait.classList.add('d-none');
+            UI.trivia.classList.remove('d-none');
+            UI.winner.classList.add('d-none');
+            
+            UI.q.textContent = data.question;
+            UI.opts.A.querySelector('.text').textContent = data.options.A;
+            UI.opts.B.querySelector('.text').textContent = data.options.B;
+            UI.opts.C.querySelector('.text').textContent = data.options.C;
+            UI.opts.D.querySelector('.text').textContent = data.options.D;
+            
+            UI.clock.classList.remove('d-none');
+            startTvClock(10); // 10 Segundos exactos locales
+        }
     } 
     else if(data.status === 'reveal') {
         clearInterval(displayTimerInterval);
         UI.clock.textContent = "0";
         
-        // Destacar la correcta y apagar las demás
         Object.keys(UI.opts).forEach(key => {
             if(key === data.correct) {
                 UI.opts[key].classList.add('correct-tv');
@@ -70,7 +71,6 @@ onValue(ref(db, 'game'), (snap) => {
             }
         });
 
-        // Mostrar al ganador
         UI.winnerName.textContent = data.winner;
         UI.winner.classList.remove('d-none');
         
@@ -80,19 +80,22 @@ onValue(ref(db, 'game'), (snap) => {
     }
 });
 
-function startTvClock(endTime) {
+function startTvClock(seconds) {
     clearInterval(displayTimerInterval);
+    let left = seconds;
+    UI.clock.textContent = left;
+    UI.clock.classList.remove('text-danger', 'pulse');
+
     displayTimerInterval = setInterval(() => {
-        const left = Math.ceil((endTime - Date.now()) / 1000);
+        left--;
         if(left <= 0) {
             UI.clock.textContent = "0";
             UI.clock.classList.add('text-danger', 'pulse');
             clearInterval(displayTimerInterval);
         } else {
-            UI.clock.classList.remove('text-danger', 'pulse');
             UI.clock.textContent = left;
         }
-    }, 100);
+    }, 1000);
 }
 
 function resetOptions() {
