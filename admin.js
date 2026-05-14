@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+import { getDatabase, ref, set, onValue, get } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDlx7HxHyPNuXxueFyPjeKn84EpFbgke1Y",
@@ -14,37 +14,64 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-const questionInput = document.getElementById('question-input');
-const currentStatus = document.getElementById('current-status');
-const winnerDisplay = document.getElementById('winner-display');
-let localWinner = "";
+const qInput = document.getElementById('question-input');
+const optA = document.getElementById('opt-A');
+const optB = document.getElementById('opt-B');
+const optC = document.getElementById('opt-C');
+const optD = document.getElementById('opt-D');
+const statusBadge = document.getElementById('current-status');
+const winnerBox = document.getElementById('admin-winner-box');
+const winnerName = document.getElementById('admin-winner-name');
 
-onValue(ref(db, 'game'), (snapshot) => {
-    const data = snapshot.val();
-    if (data) {
-        currentStatus.textContent = data.status.toUpperCase();
-        if (data.status === 'blocked') {
-            localWinner = data.winner;
-            winnerDisplay.textContent = `¡${data.winner} PRESIONÓ PRIMERO!`;
-            winnerDisplay.className = 'winner-alert active';
-        } else {
-            winnerDisplay.className = 'hidden';
-            if (data.status === 'lobby') questionInput.value = "";
-        }
-    }
+onValue(ref(db, 'game/status'), (snap) => {
+    if(snap.val()) statusBadge.textContent = snap.val().toUpperCase();
 });
 
-async function updateGameState(status) {
-    const text = questionInput.value.trim();
+document.getElementById('btn-launch').onclick = async () => {
+    const correctOpt = document.querySelector('input[name="correctOpt"]:checked').value;
+    
+    // Limpiamos las respuestas de la ronda anterior
+    await set(ref(db, 'answers'), null);
+    
     await set(ref(db, 'game'), {
-        status: status,
-        question: text,
-        winner: (status === 'lobby' || status === 'reading') ? "" : localWinner
+        status: 'active',
+        question: qInput.value.trim(),
+        options: { A: optA.value, B: optB.value, C: optC.value, D: optD.value },
+        correct: correctOpt,
+        endTime: Date.now() + 10500 // 10 segundos + margen de red
     });
-}
+    
+    winnerBox.classList.add('d-none');
+};
 
-document.getElementById('send-question-btn').onclick = () => updateGameState('reading');
-document.getElementById('enable-btn').onclick = () => updateGameState('active');
-document.getElementById('reset-btn').onclick = () => updateGameState('lobby');
+document.getElementById('btn-reveal').onclick = async () => {
+    await set(ref(db, 'game/status'), 'reveal');
+    
+    // Calcular ganador
+    const snapGame = await get(ref(db, 'game'));
+    const snapAns = await get(ref(db, 'answers'));
+    const correctAns = snapGame.val().correct;
+    
+    let fastestPlayer = "¡NADIE ACERTÓ!";
+    let fastestTime = Infinity;
 
-updateGameState('lobby');
+    if(snapAns.exists()){
+        const answers = snapAns.val();
+        for (const [playerName, data] of Object.entries(answers)) {
+            if(data.val === correctAns && data.time < fastestTime) {
+                fastestTime = data.time;
+                fastestPlayer = playerName;
+            }
+        }
+    }
+    
+    await set(ref(db, 'game/winner'), fastestPlayer);
+    winnerName.textContent = fastestPlayer;
+    winnerBox.classList.remove('d-none');
+};
+
+document.getElementById('btn-lobby').onclick = async () => {
+    await set(ref(db, 'game/status'), 'lobby');
+    qInput.value = ""; optA.value = ""; optB.value = ""; optC.value = ""; optD.value = "";
+    winnerBox.classList.add('d-none');
+};
