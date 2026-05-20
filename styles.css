@@ -5,14 +5,14 @@
 }
 body { font-family: 'Montserrat', sans-serif; background-color: var(--bg-dark); margin: 0; overflow-x: hidden; }
 
-/* FONDO DINÁMICO */
+/* FONDO DINÁMICO BLINDADO */
 .bg-custom {
-    background-color: #0a0a0a;
-    background-image: url('fondo.png'); 
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+    background-color: #0a0a0a !important;
+    background-image: url('fondo.png') !important; 
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
 }
 .bg-overlay { background: rgba(0, 0, 0, 0.75); min-height: 100vh; width: 100%; }
 
@@ -32,7 +32,7 @@ body { font-family: 'Montserrat', sans-serif; background-color: var(--bg-dark); 
 /* CELULAR - JUGADOR */
 .player-header { border-bottom: 2px solid #222; background: rgba(10, 10, 10, 0.9); min-height: 30vh; }
 .opt-btn { background: rgba(17, 17, 17, 0.9); border: 2px solid #555; border-radius: 12px; color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 10px; transition: all 0.2s; outline: none; backdrop-filter: blur(5px); position: relative; overflow: hidden; }
-.opt-btn * { pointer-events: none; } /* Importante para el clic móvil */
+.opt-btn * { pointer-events: none; }
 .opt-btn:disabled { cursor: not-allowed; opacity: 0.5; }
 .opt-btn:not(:disabled):active { transform: scale(0.95); background: #222; }
 .opt-letter { color: var(--santander-red); font-weight: 900; font-size: 1.5rem; margin-bottom: 5px; }
@@ -83,7 +83,14 @@ body { font-family: 'Montserrat', sans-serif; background-color: var(--bg-dark); 
 .admin-opt-input { background: #000; color: white; border: 1px solid #444; }
 .admin-opt-input:focus { background: #111; color: white; border-color: var(--santander-red); }
 
-/* ANIMACIONES */
+/* ESTADIO ILUMINADO (Destellos Finales) */
+@keyframes flashEstadio {
+    0%, 49% { background-color: rgba(236, 0, 0, 0.95); }
+    50%, 100% { background-color: rgba(255, 255, 255, 0.95); }
+}
+.estadio-iluminado .bg-overlay { animation: flashEstadio 0.5s infinite !important; backdrop-filter: blur(10px); }
+
+/* ANIMACIONES GLOBALES */
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 @keyframes sweep { 0% { transform: translate(-30%, -30%); } 50% { transform: translate(30%, 30%); } 100% { transform: translate(-30%, -30%); } }
 @keyframes riseUp { 0% { transform: translateY(100px) scale(0.8); opacity: 0; box-shadow: 0 0 0 rgba(0,0,0,0); } 100% { transform: translateY(0) scale(1); opacity: 1; box-shadow: 0 20px 40px rgba(0,0,0,0.6); } }
