@@ -15,18 +15,9 @@ const rankingTitle = document.getElementById('ranking-title');
 
 onValue(ref(db, 'game/status'), (snap) => {
     const s = snap.val();
-    
-    // Si el estado NO es ranking ni endgame, regresamos automáticamente a la Trivia
-    if(s !== 'ranking' && s !== 'endgame') {
-        window.location.href = "display.html";
-    }
-    
-    // Cambiar el título si es el final absoluto
-    if(s === 'endgame') {
-        rankingTitle.textContent = "🏆 PODIO FINAL 🏆";
-    } else {
-        rankingTitle.textContent = "TABLA DE POSICIONES";
-    }
+    if(s !== 'ranking' && s !== 'endgame') window.location.href = "display.html";
+    if(s === 'endgame') rankingTitle.textContent = "🏆 PODIO FINAL 🏆";
+    else rankingTitle.textContent = "TABLA DE POSICIONES";
 });
 
 onValue(ref(db, 'scores'), (snap) => {
