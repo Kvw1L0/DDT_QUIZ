@@ -5,18 +5,16 @@ const firebaseConfig = {
   apiKey: "AIzaSyDlx7HxHyPNuXxueFyPjeKn84EpFbgke1Y",
   authDomain: "buzzer-67109.firebaseapp.com",
   databaseURL: "https://buzzer-67109-default-rtdb.firebaseio.com",
-  projectId: "buzzer-67109",
-  storageBucket: "buzzer-67109.firebasestorage.app"
+  projectId: "buzzer-67109"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// SFX - Efectos de Sonido
 const sfxClick = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
-const sfxWin = new Audio('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3'); // Coin/Victoria
-const sfxLose = new Audio('https://assets.mixkit.co/active_storage/sfx/2955/2955-preview.mp3'); // Buzzer/Derrota
-const sfxHeartbeat = new Audio('https://assets.mixkit.co/active_storage/sfx/120/120-preview.mp3'); // Latido
+const sfxWin = new Audio('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3'); 
+const sfxLose = new Audio('https://assets.mixkit.co/active_storage/sfx/2955/2955-preview.mp3'); 
+const sfxHeartbeat = new Audio('https://assets.mixkit.co/active_storage/sfx/120/120-preview.mp3'); 
 
 let myName = localStorage.getItem('santander_player') || "";
 let timerInterval = null;
@@ -39,7 +37,6 @@ const UI = {
     souvenir: document.getElementById('souvenir-screen')
 };
 
-// AUTO-LOGIN (Si recarga la página)
 if(myName) {
     UI.modal.classList.add('d-none');
     UI.main.classList.remove('d-none');
@@ -54,12 +51,9 @@ document.getElementById('join-btn').onclick = async () => {
     if(safeName) { 
         myName = safeName; 
         localStorage.setItem('santander_player', myName);
-        
-        // Solicitar permisos iOS para Sensores
-        if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+        if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
             try { await DeviceOrientationEvent.requestPermission(); } catch(e){}
         }
-        
         UI.modal.classList.add('d-none'); 
         UI.main.classList.remove('d-none'); 
         UI.main.classList.add('d-flex'); 
@@ -74,14 +68,11 @@ function start() {
         if(!currentGameData) return;
         const s = currentGameData.status;
         
-        // ESTADO: LOBBY
         if(s === 'lobby') {
             resetUI();
-            document.body.className = "player-body text-white bg-custom";
             UI.status.textContent = "ESPERANDO PREGUNTA...";
             UI.status.classList.remove('d-none');
         } 
-        // ESTADO: JUGANDO
         else if(s === 'active') {
             if(UI.qText.classList.contains('d-none')) {
                 resetUI();
@@ -100,14 +91,12 @@ function start() {
                 startTimer(10);
             }
         }
-        // ESTADO: REVELACIÓN
         else if(s === 'reveal') {
             clearInterval(timerInterval);
             enableButtons(false);
             
             let isCorrect = myChoice === currentGameData.correct;
             
-            // Stats para la radiografía final
             if(isCorrect) {
                 myStats.correct++;
                 let rTime = Date.now() - questionStartTime;
@@ -115,22 +104,20 @@ function start() {
             }
             localStorage.setItem('player_stats', JSON.stringify(myStats));
 
-            // FEEDBACK SENSORIAL WOW
             if(isCorrect) {
-                document.body.classList.add('bg-success-glow'); // Flash Verde
+                document.body.classList.add('bg-success-glow');
                 sfxWin.play();
                 if("vibrate" in navigator) navigator.vibrate([100, 50, 100, 50, 200]);
                 UI.feedback.innerHTML = "¡CORRECTO! 🔥";
-                UI.feedback.className = "p-3 text-center fw-bold fs-3 bg-success text-white glow-box";
+                UI.feedback.className = "p-3 text-center fw-bold fs-3 bg-success text-white glow-box mt-3";
             } else {
-                document.body.classList.add('bg-danger-glow'); // Flash Rojo
+                document.body.classList.add('bg-danger-glow');
                 sfxLose.play();
-                if("vibrate" in navigator) navigator.vibrate(500); // Vibración seca
+                if("vibrate" in navigator) navigator.vibrate(500); 
                 UI.feedback.innerHTML = myChoice ? "INCORRECTO ❌" : "TIEMPO AGOTADO ⌛";
-                UI.feedback.className = "p-3 text-center fw-bold fs-3 bg-danger text-white";
+                UI.feedback.className = "p-3 text-center fw-bold fs-3 bg-danger text-white mt-3";
             }
 
-            // Pintar botones
             UI.btns.forEach(b => {
                 if(b.dataset.opt === currentGameData.correct) b.classList.add('correct-ans');
                 else if(b.dataset.opt === myChoice) b.classList.add('wrong-ans');
@@ -138,25 +125,21 @@ function start() {
             });
             UI.feedback.classList.remove('d-none');
         }
-        // ESTADO: GRAN FINAL Y SOUVENIR
         else if(s === 'ranking') {
             UI.main.classList.add('d-none');
             UI.souvenir.classList.remove('d-none');
             
-            // ESTADIO ILUMINADO: Alternar luz pura en celulares
             setInterval(() => {
                 document.body.style.backgroundColor = document.body.style.backgroundColor === 'white' ? '#ec0000' : 'white';
                 document.body.style.backgroundImage = 'none';
             }, 500);
 
-            // Generar Souvenir
             document.getElementById('sov-name').textContent = myName;
             document.getElementById('sov-correct').textContent = myStats.correct;
             document.getElementById('sov-time').textContent = myStats.fastTime === 9999 ? "N/A" : (myStats.fastTime/1000).toFixed(2) + "s";
             
-            // Generar QR (Requiere librería en index.html)
             document.getElementById("qrcode").innerHTML = "";
-            new QRCode(document.getElementById("qrcode"), { text: `SantanderTrivia:${myName}`, width: 100, height: 100 });
+            new QRCode(document.getElementById("qrcode"), { text: `SantanderTrivia:${myName}`, width: 120, height: 120 });
         }
     });
 }
@@ -164,13 +147,11 @@ function start() {
 function startTimer(seconds) {
     questionStartTime = Date.now();
     let left = seconds * 1000;
-    
     timerInterval = setInterval(() => {
         left -= 50;
         UI.timerFill.style.width = `${(left / 10000) * 100}%`;
         UI.timerText.textContent = (left / 1000).toFixed(1) + "s";
         
-        // HEARTBEAT SYNC (Últimos 3 segundos)
         if(left > 0 && left <= 3000 && left % 1000 === 0) {
             sfxHeartbeat.play();
             if("vibrate" in navigator) navigator.vibrate(100);
@@ -185,13 +166,11 @@ function startTimer(seconds) {
     }, 50);
 }
 
-// MICRO-INTERACCIONES CLICK
 UI.btns.forEach(btn => {
     btn.onclick = async () => {
         if(currentGameData?.status !== 'active') return;
         myChoice = btn.dataset.opt;
         
-        // Loading Glow effect
         UI.btns.forEach(b => { b.classList.remove('selected-ans'); b.innerHTML = b.innerHTML.replace('<div class="spinner"></div>', ''); });
         btn.classList.add('selected-ans');
         btn.innerHTML += '<div class="spinner"></div>';
@@ -203,17 +182,14 @@ UI.btns.forEach(btn => {
     };
 });
 
-// EFECTOS FÍSICOS (Giroscopio y Agitación)
 function initSensors() {
     window.addEventListener('deviceorientation', (e) => {
         if(currentGameData?.status !== 'active') return;
-        // Parallax 3D
         let tiltX = Math.min(Math.max(e.gamma, -20), 20); 
         let tiltY = Math.min(Math.max(e.beta - 45, -20), 20);
         UI.grid.style.transform = `rotateY(${tiltX}deg) rotateX(${-tiltY}deg)`;
     });
 
-    // 50/50 JOKER SHAKE
     let lastX=0, lastY=0, lastZ=0;
     window.addEventListener('devicemotion', (e) => {
         if(currentGameData?.status !== 'active' || usedJoker) return;
@@ -221,12 +197,11 @@ function initSensors() {
         if(!acc) return;
         let delta = Math.abs(acc.x - lastX) + Math.abs(acc.y - lastY) + Math.abs(acc.z - lastZ);
         
-        if(delta > 40) { // Umbral de agitación brusca
+        if(delta > 40) { 
             usedJoker = true;
             localStorage.setItem('used_joker', 'true');
             if("vibrate" in navigator) navigator.vibrate([300, 100, 300]);
             
-            // Ocultar 2 opciones incorrectas
             let opts = ['A','B','C','D'].filter(o => o !== currentGameData.correct);
             let toHide = opts.sort(() => 0.5 - Math.random()).slice(0, 2);
             toHide.forEach(opt => {
@@ -235,7 +210,7 @@ function initSensors() {
             });
             UI.feedback.innerHTML = "¡COMODÍN 50/50 ACTIVADO!";
             UI.feedback.classList.remove('d-none');
-            UI.feedback.className = "p-2 text-center fw-bold fs-5 bg-warning text-dark";
+            UI.feedback.className = "p-2 mt-3 text-center fw-bold fs-5 bg-warning text-dark";
         }
         lastX = acc.x; lastY = acc.y; lastZ = acc.z;
     });
