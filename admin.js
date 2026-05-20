@@ -72,6 +72,12 @@ document.getElementById('btn-lobby').onclick = async () => {
     winnerBox.classList.add('d-none');
 };
 
+document.getElementById('btn-endgame').onclick = async () => {
+    if(confirm("¿Seguro que quieres TERMINAR EL JUEGO? Esto mostrará el código QR final en los celulares.")) {
+        await set(ref(db, 'game/status'), 'endgame');
+    }
+};
+
 document.getElementById('btn-reset-scores').onclick = async () => {
     if(confirm("¿Seguro que quieres borrar todos los puntajes históricos?")) {
         await set(ref(db, 'scores'), null);
