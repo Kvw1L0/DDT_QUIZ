@@ -9,9 +9,8 @@
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
-<body class="player-body text-white" style="background-image: url('fondo.png'); background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed; background-color: #0a0a0a;">
-    
-    <div class="bg-overlay d-flex flex-column h-100" style="background: rgba(0, 0, 0, 0.75); min-height: 100vh; width: 100%;">
+<body class="player-body text-white bg-custom">
+    <div class="bg-overlay d-flex flex-column h-100">
 
         <div id="login-modal" class="custom-modal-overlay">
             <div class="custom-popup-box glow-box">
@@ -47,7 +46,7 @@
 
         <div id="souvenir-screen" class="d-none h-100 d-flex align-items-center justify-content-center p-3" style="z-index: 9999; position: relative;">
             <div class="souvenir-card glow-box bg-dark p-4 rounded text-center w-100" style="border: 4px solid var(--santander-red); max-width: 400px; aspect-ratio: 2/3;">
-                
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Banco_Santander_Logotipo.svg/1200px-Banco_Santander_Logotipo.svg.png" width="150" class="mb-4">
                 <h2 class="text-danger fw-black text-uppercase mb-1" id="sov-name">NOMBRE</h2>
                 <h5 class="text-secondary mb-4">ESTADÍSTICAS OFICIALES</h5>
                 <div class="d-flex justify-content-between mb-3 border-bottom border-secondary pb-2">
