@@ -1,61 +1,61 @@
-:root {
-    --santander-red: #ec0000;
-    --santander-dark: #b30000;
-    --bg-dark: #0a0a0a;
+/* EFECTOS GLOBALES Y GLOW */
+.glow-box { box-shadow: 0 0 20px rgba(236, 0, 0, 0.4), inset 0 0 10px rgba(236, 0, 0, 0.2); }
+.tv-diamond-frame { transition: box-shadow 0.3s ease; }
+.tv-diamond-frame.active-glow { box-shadow: 0 0 60px rgba(236, 0, 0, 0.8), inset 0 0 40px rgba(236, 0, 0, 0.5); border-color: #ff3333; }
+
+/* FEEDBACK CELULAR FLASHES */
+.bg-success-glow { background-color: #1a4d2e !important; transition: background-color 0.2s; }
+.bg-danger-glow { background-color: #4d1a1a !important; transition: background-color 0.1s; }
+.pulse-danger { box-shadow: inset 0 0 50px rgba(236, 0, 0, 0.8); transition: box-shadow 0.1s; }
+
+/* MICRO-INTERACCIÓN CARGA (SPINNER) */
+.opt-btn { position: relative; overflow: hidden; transform-style: preserve-3d; }
+.spinner {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 50px; height: 50px;
+    margin-top: -25px; margin-left: -25px;
+    border: 4px solid rgba(255, 215, 0, 0.2);
+    border-top: 4px solid #ffd700;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    pointer-events: none;
 }
-body { font-family: 'Montserrat', sans-serif; background-color: var(--bg-dark); }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-/* POPUP LOGIN */
-.custom-modal-overlay { position: fixed; inset: 0; background: radial-gradient(circle at center, rgba(30,0,0,0.9) 0%, rgba(0,0,0,0.95) 100%); background-image: radial-gradient(#222 15%, transparent 16%), radial-gradient(#222 15%, transparent 16%); background-size: 20px 20px; display: flex; justify-content: center; align-items: center; z-index: 1050; }
-.custom-popup-box { background-color: #0f0f0f; border: 3px solid var(--santander-red); border-radius: 12px; padding: 40px 30px; width: 90%; max-width: 400px; box-shadow: 0 0 25px rgba(236, 0, 0, 0.4); animation: popupIn 0.3s ease-out; }
-.popup-title { color: var(--santander-red); font-weight: 900; font-size: 1.5rem; text-align: center; margin-bottom: 25px; }
-.custom-input { background-color: #1a1a1a; border: 1px solid #333; color: #fff; width: 100%; border-radius: 6px; outline: none; transition: 0.2s; }
-.custom-input:focus { border-color: var(--santander-red); box-shadow: 0 0 10px rgba(236, 0, 0, 0.3); }
-.custom-btn-siguiente { background-color: var(--santander-red); color: #fff; border: none; padding: 14px; border-radius: 6px; font-weight: 900; font-size: 1.2rem; transition: 0.2s; }
-.custom-btn-siguiente:active { transform: scale(0.96); background-color: var(--santander-dark); }
+/* SOUVENIR (Ajustado para formato 10x15cm fotográfico) */
+.souvenir-card {
+    background: linear-gradient(145deg, #111, #0a0a0a);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+    animation: slideUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
 
-/* CELULAR - JUGADOR */
-.player-header { border-bottom: 2px solid #222; background: linear-gradient(to bottom, #1a1a1a, #000); min-height: 30vh; }
-.opt-btn { background: #111; border: 2px solid #333; border-radius: 12px; color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 10px; transition: all 0.2s; outline: none; }
-.opt-btn:disabled { cursor: not-allowed; }
-.opt-btn:not(:disabled):active { transform: scale(0.95); background: #222; }
-.opt-letter { color: var(--santander-red); font-weight: 900; font-size: 1.5rem; margin-bottom: 5px; }
-.opt-text { font-size: 1.1rem; font-weight: 700; word-break: break-word; line-height: 1.1; }
+/* EFECTO LUCES DE ESTUDIO (Display Gigante) */
+.spotlight-sweep {
+    position: relative;
+    overflow: hidden;
+}
+.spotlight-sweep::after {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 20%);
+    animation: sweep 3s infinite linear;
+    pointer-events: none;
+}
+@keyframes sweep {
+    0% { transform: translate(-30%, -30%); }
+    50% { transform: translate(30%, 30%); }
+    100% { transform: translate(-30%, -30%); }
+}
 
-.selected-ans { border-color: #ffd700; box-shadow: inset 0 0 15px rgba(255, 215, 0, 0.2); background: rgba(255, 215, 0, 0.1); }
-.correct-ans { background: #28a745 !important; border-color: #fff !important; color: white !important; }
-.correct-ans .opt-letter { color: white; }
-.wrong-ans { background: var(--santander-red) !important; border-color: #fff !important; }
-.wrong-ans .opt-letter { color: white; }
-
-/* PANTALLA GIGANTE - TV SHOW */
-.tv-display-body { background: radial-gradient(circle at center, #1a0000 0%, #050505 100%); }
-.tv-logo { max-width: 350px; filter: drop-shadow(0 0 15px rgba(255,255,255,0.1)); }
-.tv-diamond-frame { background: rgba(0, 0, 0, 0.7); border: 4px solid var(--santander-red); border-radius: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.8), inset 0 0 30px rgba(236, 0, 0, 0.3); backdrop-filter: blur(10px); }
-
-.tv-clock-circle { width: 100px; height: 100px; border-radius: 50%; background: #111; border: 4px solid var(--santander-red); color: white; display: flex; justify-content: center; align-items: center; font-size: 3rem; font-weight: 900; box-shadow: 0 0 20px rgba(236,0,0,0.5); }
-
-.tv-opt-box { background: linear-gradient(90deg, #111, #1a1a1a, #111); border: 3px solid var(--santander-red); border-radius: 50px; padding: 25px 40px; font-size: 2.5rem; font-weight: 700; color: white; display: flex; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.5); transition: 0.5s all; }
-.tv-opt-box .letter { color: var(--santander-red); margin-right: 20px; font-weight: 900; }
-.correct-tv { background: #28a745; border-color: #fff; box-shadow: 0 0 50px rgba(40, 167, 69, 0.8); transform: scale(1.05); }
-.correct-tv .letter { color: white; }
-
-.winner-banner { background: linear-gradient(90deg, transparent, rgba(236,0,0,0.9), transparent); animation: slideUp 0.5s ease-out; padding: 30px 0; }
-.tracking-wider { letter-spacing: 0.2em; }
-
-/* ADMIN */
-.admin-body { background: #111; color: #fff; }
-.panel-section { background: #1e1e1e; padding: 25px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #333; }
-.admin-opt-input { background: #000; color: white; border: 1px solid #444; }
-.admin-opt-input:focus { background: #111; color: white; border-color: var(--santander-red); box-shadow: none; }
-
-@keyframes popupIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-@keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-.pulse-slow { animation: pulse 2.5s infinite; }
-.fw-black { font-weight: 900; }
-
-/* Agrega esto a tu styles.css actual para asegurar el clic en celulares */
-.opt-btn * { 
-    pointer-events: none; 
+/* PODIO 3D EN RANKING */
+.ranking-row { 
+    transform-origin: bottom center; 
+    animation: riseUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; 
+}
+@keyframes riseUp {
+    0% { transform: translateY(100px) scale(0.8); opacity: 0; box-shadow: 0 0 0 rgba(0,0,0,0); }
+    100% { transform: translateY(0) scale(1); opacity: 1; box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
 }
