@@ -1,35 +1,23 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDlx7HxHyPNuXxueFyPjeKn84EpFbgke1Y",
-  authDomain: "buzzer-67109.firebaseapp.com",
-  databaseURL: "https://buzzer-67109-default-rtdb.firebaseio.com",
-  projectId: "buzzer-67109"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-const rankingList = document.getElementById('ranking-list');
-
-onValue(ref(db, 'game/status'), (snap) => {
-    if(snap.val() !== 'ranking') window.location.href = "display.html";
-});
-
-onValue(ref(db, 'scores'), (snap) => {
-    rankingList.innerHTML = "";
-    if(!snap.exists()) {
-        rankingList.innerHTML = "<h2 class='text-center text-white mt-5'>Aún no hay puntajes</h2>";
-        return;
-    }
-    const sortedScores = Object.entries(snap.val()).map(([name, score]) => ({ name, score })).sort((a, b) => b.score - a.score).slice(0, 7);
-    sortedScores.forEach((player, index) => {
-        const delay = index * 0.1;
-        rankingList.innerHTML += `
-            <div class="ranking-row" style="animation-delay: ${delay}s">
-                <div class="rank-pos">#${index + 1}</div>
-                <div class="rank-name">${player.name}</div>
-                <div class="rank-score">${player.score} PTS</div>
-            </div>`;
-    });
-});
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking TV</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="tv-display-body bg-custom">
+    <div class="bg-overlay container-fluid h-100 d-flex flex-column p-5">
+        <div class="text-center mb-5">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Banco_Santander_Logotipo.svg/1200px-Banco_Santander_Logotipo.svg.png" class="tv-logo mb-3" alt="Santander">
+            <h1 id="ranking-title" class="display-3 fw-black text-warning tracking-wider text-uppercase">TABLA DE POSICIONES</h1>
+        </div>
+        <div class="flex-grow-1 overflow-hidden w-100">
+            <div id="ranking-list" class="ranking-container"></div>
+        </div>
+    </div>
+    <script type="module" src="ranking.js"></script>
+</body>
+</html>
