@@ -14,7 +14,7 @@ const db = getDatabase(app);
 const sfxClick = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
 const sfxWin = new Audio('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3'); 
 const sfxLose = new Audio('https://assets.mixkit.co/active_storage/sfx/2955/2955-preview.mp3'); 
-const sfxHeartbeat = new Audio('https://assets.mixkit.co/active_storage/sfx/120/120-preview.mp3'); 
+const sfxTick = new Audio('https://assets.mixkit.co/active_storage/sfx/2569/2569-preview.mp3');; 
 
 let myName = "";
 try { myName = localStorage.getItem('santander_player') || ""; } catch(e) {}
@@ -177,7 +177,7 @@ function startTimer(seconds) {
         UI.timerText.textContent = (Math.max(0, left) / 1000).toFixed(1) + "s";
         
         if(left > 0 && left <= 3000 && left % 1000 === 0) {
-            sfxHeartbeat.play().catch(()=>{});
+            sfxTick.play().catch(()=>{});
             if("vibrate" in navigator) navigator.vibrate(100);
             document.body.classList.add('pulse-danger');
             setTimeout(() => document.body.classList.remove('pulse-danger'), 200);
