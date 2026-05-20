@@ -65,22 +65,24 @@ document.getElementById('btn-reveal').onclick = async () => {
 };
 
 document.getElementById('btn-ranking').onclick = async () => { await set(ref(db, 'game/status'), 'ranking'); };
-
 document.getElementById('btn-lobby').onclick = async () => {
     await set(ref(db, 'game/status'), 'lobby');
     qInput.value = ""; optA.value = ""; optB.value = ""; optC.value = ""; optD.value = "";
     winnerBox.classList.add('d-none');
 };
-
 document.getElementById('btn-endgame').onclick = async () => {
-    if(confirm("¿Seguro que quieres TERMINAR EL JUEGO? Esto mostrará el código QR final en los celulares.")) {
+    if(confirm("¿Seguro que quieres TERMINAR EL JUEGO? Esto mostrará el código QR en los celulares.")) {
         await set(ref(db, 'game/status'), 'endgame');
     }
 };
 
-document.getElementById('btn-reset-scores').onclick = async () => {
-    if(confirm("¿Seguro que quieres borrar todos los puntajes históricos?")) {
+document.getElementById('btn-nueva-sesion').onclick = async () => {
+    if(confirm("¡ATENCIÓN! Esto borrará TODOS los puntajes y respuestas. ¿Estás seguro?")) {
         await set(ref(db, 'scores'), null);
-        alert("Puntajes borrados.");
+        await set(ref(db, 'answers'), null);
+        await set(ref(db, 'game'), { status: 'lobby', question: '', options: { A: '', B: '', C: '', D: '' }, correct: 'A' });
+        qInput.value = ""; optA.value = ""; optB.value = ""; optC.value = ""; optD.value = "";
+        winnerBox.classList.add('d-none');
+        alert("Sesión limpia. Listo para jugar.");
     }
 };
