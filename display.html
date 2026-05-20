@@ -9,33 +9,18 @@
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
-<body class="tv-display-body">
-    
-    <div class="container-fluid h-100 d-flex flex-column p-5">
-        <!-- Logo Header -->
+<body class="tv-display-body bg-custom">
+    <div class="bg-overlay container-fluid h-100 d-flex flex-column p-5">
         <div class="text-center mb-4">
-            
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Banco_Santander_Logotipo.svg/1200px-Banco_Santander_Logotipo.svg.png" class="tv-logo" alt="Santander">
         </div>
-
-        <!-- Escenario -->
         <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center w-100">
-            
-            <div id="waiting-area" class="text-center">
-                <h2 class="pulse-slow display-2 fw-light text-white-50">ESPERANDO PREGUNTA</h2>
-            </div>
-            
-            <!-- Contenedor Principal Trivia -->
+            <div id="waiting-area" class="text-center"><h2 class="pulse-slow display-2 fw-light text-white-50">ESPERANDO PREGUNTA</h2></div>
             <div id="trivia-area" class="w-100 d-none" style="max-width: 1400px;">
-                
-                <!-- Pregunta -->
                 <div class="tv-diamond-frame text-center mb-5 p-5">
                     <h1 id="tv-question" class="display-3 fw-black text-white text-uppercase m-0"></h1>
-                    
-                    <!-- Reloj TV -->
                     <div id="tv-clock" class="tv-clock-circle mx-auto mt-4 d-none">10</div>
                 </div>
-
-                <!-- 4 Alternativas -->
                 <div class="row g-4 mt-2">
                     <div class="col-6"><div id="tv-opt-A" class="tv-opt-box"><span class="letter">A:</span> <span class="text"></span></div></div>
                     <div class="col-6"><div id="tv-opt-B" class="tv-opt-box"><span class="letter">B:</span> <span class="text"></span></div></div>
@@ -43,16 +28,12 @@
                     <div class="col-6"><div id="tv-opt-D" class="tv-opt-box"><span class="letter">D:</span> <span class="text"></span></div></div>
                 </div>
             </div>
-
-            <!-- Ganador Final -->
             <div id="winner-banner" class="winner-banner w-100 text-center d-none mt-5">
                 <h3 class="text-warning tracking-wider mb-2">¡MÁS RÁPIDO EN ACERTAR!</h3>
                 <h1 id="winner-name-tv" class="display-1 fw-black text-white text-uppercase m-0">NOMBRE</h1>
             </div>
-
         </div>
     </div>
-
     <script type="module" src="display.js"></script>
 </body>
 </html>
