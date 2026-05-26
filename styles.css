@@ -5,6 +5,35 @@
 }
 body { font-family: 'Montserrat', sans-serif; background-color: var(--bg-dark); margin: 0; overflow-x: hidden; }
 
+/* --- CONFIGURACIÓN BASE PARA TODOS LOS FONDOS --- */
+.player-body, 
+.display-body, 
+.ranking-body {
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover; /* Esto asegura que la imagen cubra toda la pantalla sin deformarse */
+    background-attachment: fixed; /* Evita que el fondo se mueva si hay scroll */
+}
+
+/* --- FONDOS ESPECÍFICOS POR ARCHIVO --- */
+
+/* Fondo para index.html */
+.player-body {
+    background-image: url('index.png');
+}
+
+/* Fondo para display.html */
+.display-body {
+    background-image: url('display.png');
+}
+
+/* Fondo para ranking.html */
+.ranking-body {
+    background-image: url('ranking.png');
+}
+
+
+
 /* FONDO DINÁMICO BLINDADO */
 .bg-custom {
     background-color: #0a0a0a !important;
