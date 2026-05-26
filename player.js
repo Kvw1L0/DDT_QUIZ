@@ -106,7 +106,7 @@ function start() {
                 UI.timerContainer.classList.remove('d-none');
                 UI.timerText.classList.remove('d-none');
                 enableButtons(true);
-                startTimer(10);
+                startTimer(20);
             }
         }
         else if(s === 'reveal') {
