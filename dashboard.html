@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Estadísticas de Activación</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-dark text-white p-4">
+    <h1 class="mb-4 text-warning">Panel de Control en Vivo</h1>
+    
+    <div class="row g-4">
+        <!-- Tarjeta de Jugadores -->
+        <div class="col-md-3">
+            <div class="card bg-secondary text-white p-3 text-center glow-box">
+                <h5>Jugadores en Sesión</h5>
+                <h2 id="dash-jugadores">0</h2>
+            </div>
+        </div>
+        <!-- Puedes replicar esta tarjeta para las otras métricas -->
+    </div>
+
+    <script type="module" src="dashboard.js"></script>
+</body>
+</html>
